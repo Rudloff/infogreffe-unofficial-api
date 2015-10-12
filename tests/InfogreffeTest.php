@@ -1,9 +1,9 @@
 <?php
 /**
  * InfogreffeTest class
- * 
+ *
  * PHP Version 5.4
- * 
+ *
  * @category API
  * @package  Infogreffe
  * @author   Pierre Rudloff <contact@rudloff.pro>
@@ -11,13 +11,14 @@
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
 
-require_once __DIR__.'/../Infogreffe.class.php';
+require_once __DIR__.'/../vendor/autoload.php';
+use InfogreffeUnofficial\Infogreffe;
 
 /**
  * Unit tests for Infogreffe class
- * 
+ *
  * PHP Version 5.4
- * 
+ *
  * @category API
  * @package  Infogreffe
  * @author   Pierre Rudloff <contact@rudloff.pro>
@@ -26,7 +27,7 @@ require_once __DIR__.'/../Infogreffe.class.php';
  * */
 class InfogreffeTest extends PHPUnit_Framework_TestCase
 {
- 
+
     /**
      * Test searchByName
      * @return void
