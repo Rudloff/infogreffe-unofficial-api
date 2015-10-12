@@ -62,10 +62,16 @@ class Infogreffe
      * */
     static function searchBySIRET($siret)
     {
-        $json = @file_get_contents(
-            self::$_BASEURL.self::$_JSONURL.'?sirenOuSiret='.$siret.
-            '&typeEntreprise=TOUS&etsRadiees=false&etabSecondaire=false'
-        );
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', self::$_BASEURL.self::$_JSONURL, array(
+            'query' => array(
+                'sirenOuSiret' => $siret,
+                'typeEntreprise'=>'TOUS',
+                'etsRadiees'=>'false',
+                'etabSecondaire'=>'false'
+            )
+        ));
+        $json = $response->getBody();
         $result = json_decode(
             $json
         );
@@ -84,11 +90,18 @@ class Infogreffe
      * */
     static function searchByName($name)
     {
-        $result = json_decode(
-            file_get_contents(
-                self::$_BASEURL.self::$_JSONURL.'?deno='.urlencode($name).
-                '&typeEntreprise=TOUS&etsRadiees=false&etabSecondaire=false'
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', self::$_BASEURL.self::$_JSONURL, array(
+            'query' => array(
+                'deno' => $name,
+                'typeEntreprise'=>'TOUS',
+                'etsRadiees'=>'false',
+                'etabSecondaire'=>'false'
             )
+        ));
+        $json = $response->getBody();
+        $result = json_decode(
+            $json
         );
         return self::_getArrayFromJSON($result);
     }
