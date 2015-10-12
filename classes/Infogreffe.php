@@ -75,9 +75,6 @@ class Infogreffe
         $result = json_decode(
             $json
         );
-        if (!is_object($result)) {
-            throw new \Exception('Could not get valid JSON');
-        }
         return self::_getArrayFromJSON($result);
     }
 

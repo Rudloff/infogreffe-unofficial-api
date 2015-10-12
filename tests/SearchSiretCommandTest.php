@@ -65,7 +65,7 @@ class SearchSiretCommandTest extends PHPUnit_Framework_TestCase
      * Test execute with invalid SIRET
      *
      * @return            void
-     * @expectedException Exception
+     * @expectedException GuzzleHttp\Exception\ClientException
      */
     public function testExecuteError()
     {
