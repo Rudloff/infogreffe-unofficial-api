@@ -60,8 +60,10 @@ class SearchNameCommand extends Command
         } else {
             foreach ($result as $org) {
                 $org->address['lines'] = implode(', ', $org->address['lines']);
-                $output->writeln($org->name.' | '.$org->siret.' | '.
-                    implode(', ', $org->address));
+                $output->writeln(
+                    $org->name.' | '.$org->siret.' | '.
+                    implode(', ', $org->address)
+                );
             }
         }
     }

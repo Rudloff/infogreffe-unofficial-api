@@ -62,12 +62,16 @@ class Infogreffe
      * */
     static function searchBySIRET($siret)
     {
-        $result = json_decode(
-            file_get_contents(
-                self::$_BASEURL.self::$_JSONURL.'?sirenOuSiret='.$siret.
-                '&typeEntreprise=TOUS&etsRadiees=false&etabSecondaire=false'
-            )
+        $json = @file_get_contents(
+            self::$_BASEURL.self::$_JSONURL.'?sirenOuSiret='.$siret.
+            '&typeEntreprise=TOUS&etsRadiees=false&etabSecondaire=false'
         );
+        $result = json_decode(
+            $json
+        );
+        if (!is_object($result)) {
+            throw new \Exception('Could not get valid JSON');
+        }
         return self::_getArrayFromJSON($result);
     }
 

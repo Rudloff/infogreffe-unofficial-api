@@ -54,14 +54,16 @@ class SearchSiretCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $result = Infogreffe::searchBySiret($input->getArgument('name'));
+        $result = Infogreffe::searchBySiret($input->getArgument('siret'));
         if (empty($result)) {
             $output->writeln('<error>No result :/</error>');
         } else {
             foreach ($result as $org) {
                 $org->address['lines'] = implode(', ', $org->address['lines']);
-                $output->writeln($org->name.' | '.$org->siret.' | '.
-                    implode(', ', $org->address));
+                $output->writeln(
+                    $org->name.' | '.$org->siret.' | '.
+                    implode(', ', $org->address)
+                );
             }
         }
     }

@@ -11,7 +11,6 @@
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
 
-require_once __DIR__.'/../vendor/autoload.php';
 use InfogreffeUnofficial\Infogreffe;
 
 /**
