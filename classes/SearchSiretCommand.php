@@ -39,6 +39,7 @@ class SearchSiretCommand extends Command
     {
         $this
             ->setName('search:siret')
+            ->setDescription('Search by SIRET')
             ->addArgument(
                 'siret',
                 InputArgument::REQUIRED,

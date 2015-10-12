@@ -39,6 +39,7 @@ class SearchNameCommand extends Command
     {
         $this
             ->setName('search:name')
+            ->setDescription('Search by name')
             ->addArgument(
                 'name',
                 InputArgument::REQUIRED,
