@@ -38,7 +38,7 @@ class SearchCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('search:all')
+            ->setName('search')
             ->setDescription('Search')
             ->addArgument(
                 'query',

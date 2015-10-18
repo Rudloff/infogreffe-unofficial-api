@@ -1,6 +1,6 @@
 <?php
 /**
- * SearchSiretCommandTest class
+ * SearchCommandTest class
  *
  * PHP Version 5.4
  *
@@ -11,12 +11,12 @@
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
 
-use InfogreffeUnofficial\SearchSiretCommand;
+use InfogreffeUnofficial\SearchCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit tests for SearchSiretCommand class
+ * Unit tests for SearchCommand class
  *
  * PHP Version 5.4
  *
@@ -26,7 +26,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
-class SearchSiretCommandTest extends PHPUnit_Framework_TestCase
+class SearchCommandTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Setup tests
@@ -35,9 +35,9 @@ class SearchSiretCommandTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $application = new Application();
-        $application->add(new SearchSiretCommand());
+        $application->add(new SearchCommand());
 
-        $this->command = $application->find('search:siret');
+        $this->command = $application->find('search');
         $this->commandTester = new CommandTester($this->command);
     }
 
@@ -50,43 +50,27 @@ class SearchSiretCommandTest extends PHPUnit_Framework_TestCase
         $this->commandTester->execute(
             array(
                 'command' => $this->command->getName(),
-                'siret'=>'75108721400027'
+                'query'=>'Pierre Jules Rudloff'
             )
         );
 
         $this->assertEquals(
-            'RUDLOFF PIERRE JULES | 75108721400027 | MONSIEUR PIERRE RUDLOFF'.
-            ', 87 ROUTE DU POLYGONE, 67100, STRASBOURG, France'.PHP_EOL,
+            'RUDLOFF PIERRE JULES | 75108721400027 | MONSIEUR PIERRE RUDLOFF, '.
+            '87 ROUTE DU POLYGONE, 67100, STRASBOURG, France'.PHP_EOL,
             $this->commandTester->getDisplay()
         );
     }
 
     /**
-     * Test execute with invalid SIRET
-     *
-     * @return            void
-     * @expectedException GuzzleHttp\Exception\ClientException
+     * Test execute with wrong name
+     * @return void
      */
     public function testExecuteError()
     {
         $this->commandTester->execute(
             array(
                 'command' => $this->command->getName(),
-                'siret'=>'foobar'
-            )
-        );
-    }
-
-    /**
-     * Test execute with wrong SIRET
-     * @return void
-     */
-    public function testExecuteNoResult()
-    {
-        $this->commandTester->execute(
-            array(
-                'command' => $this->command->getName(),
-                'siret'=>'75108721400026'
+                'query'=>'foobarbaz'
             )
         );
 

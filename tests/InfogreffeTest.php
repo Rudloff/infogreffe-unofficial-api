@@ -28,10 +28,10 @@ class InfogreffeTest extends PHPUnit_Framework_TestCase
 {
 
     /**
-     * Test searchByName
+     * Test search
      * @return void
      * */
-    public function testSearchByName()
+    public function testSearch()
     {
         $this->assertEquals(
             array(
@@ -41,25 +41,7 @@ class InfogreffeTest extends PHPUnit_Framework_TestCase
                     67100, 'STRASBOURG'
                 )
             ),
-            Infogreffe::searchByName('Pierre Rudloff')
-        );
-    }
-
-    /**
-     * Test searchBySIRET
-     * @return void
-     * */
-    public function testSearchBySIRET()
-    {
-        $this->assertEquals(
-            array(
-                new Infogreffe(
-                    751087214, '00027', 'RUDLOFF PIERRE JULES',
-                    array('MONSIEUR PIERRE RUDLOFF', '87 ROUTE DU POLYGONE'),
-                    67100, 'STRASBOURG'
-                )
-            ),
-            Infogreffe::searchBySIRET(751087214)
+            Infogreffe::search('Pierre Jules Rudloff')
         );
     }
 }

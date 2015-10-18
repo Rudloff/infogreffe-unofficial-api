@@ -25,9 +25,7 @@ namespace InfogreffeUnofficial;
 class Infogreffe
 {
     static private $_BASEURL = 'https://www.infogreffe.fr/';
-    static private $_JSONURL
-        = 'services/entreprise/rest/recherche/';
-//https://www.infogreffe.fr/services/entreprise/rest/recherche/parPhrase?typeProduitMisEnAvant=EXTRAIT&phrase=Pierre%20Rudloff
+
     /**
      * Infogreffe constructor
      *
@@ -54,94 +52,96 @@ class Infogreffe
     }
 
     /**
-     * Search by SIRET
-     *
-     * @param int $siret SIRET
-     *
-     * @return array Array of Infogreffe objects
-     * */
-    static function searchBySIRET($siret)
-    {
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', self::$_BASEURL.self::$_JSONURL.'parEntreprise', array(
-            'query' => array(
-                'sirenOuSiret' => $siret,
-                'typeEntreprise'=>'TOUS',
-                'etsRadiees'=>'false',
-                'etabSecondaire'=>'false'
-            )
-        ));
-        $json = $response->getBody();
-        $result = json_decode(
-            $json
-        );
-        return self::_getArrayFromJSON($result);
-    }
-
-    /**
-     * Search by name
-     *
-     * @param string $name Name
-     *
-     * @return array Array of Infogreffe objects
-     * */
-    static function searchByName($name)
-    {
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', self::$_BASEURL.self::$_JSONURL.'parEntreprise', array(
-            'query' => array(
-                'deno' => $name,
-                'typeEntreprise'=>'TOUS',
-                'etsRadiees'=>'false',
-                'etabSecondaire'=>'false'
-            )
-        ));
-        $json = $response->getBody();
-        $result = json_decode(
-            $json
-        );
-        return self::_getArrayFromJSON($result);
-    }
-
+     * Search for a company
+     * @param  string $query Query
+     * @return array Results
+     */
     static function search($query)
     {
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', self::$_BASEURL.self::$_JSONURL.'parPhrase', array(
-            'query' => array(
-                'phrase' => $query,
-                'typeProduitMisEnAvant'=>'EXTRAIT'
+        $client = new \GuzzleHttp\Client(array('cookies' => true));
+        $response = $client->request(
+            'GET', self::$_BASEURL.'services/entreprise/rest/recherche/parPhrase',
+            array(
+                'query' => array(
+                    'phrase' => $query,
+                    'typeProduitMisEnAvant'=>'EXTRAIT'
+                )
             )
-        ));
+        );
         $json = $response->getBody();
         $result = json_decode(
             $json
         );
-        return self::_getArrayFromJSON($result);
+
+        $client->request(
+            'GET', self::$_BASEURL.'societes/recherche-entreprise-dirigeants/'.
+            'resultats-entreprise-dirigeants.html'
+        );
+        $response = $client->request(
+            'GET', 'https://www.infogreffe.fr/services/entreprise/rest/recherche/'.
+            'derniereRechercheEntreprise'
+        );
+        $response = json_decode($response->getBody());
+        $idsRCS = $idsNoRCS = array();
+        foreach ($response->entrepRCSStoreResponse->items as $result) {
+            if (isset($result->id)) {
+                $idsRCS[] = $result->id;
+            }
+        }
+        foreach ($response->entrepHorsRCSStoreResponse->items as $result) {
+            if (isset($result->id)) {
+                $idsNoRCS[] = $result->id;
+            }
+        }
+        $items = array();
+        if (!empty($idsRCS)) {
+            $resultRCS = $client->request(
+                'POST',
+                self::$_BASEURL.'services/entreprise/rest/recherche/'.
+                'resumeEntreprise?typeRecherche=ENTREP_RCS_ACTIF',
+                array(
+                    'json'=>$idsRCS,
+                    'headers'=>array('Content-Type'=>'text/plain')
+                )
+            );
+            $items = array_merge($items, json_decode($resultRCS->getBody())->items);
+        }
+        if (!empty($idsNoRCS)) {
+            $resultNoRCS = $client->request(
+                'POST',
+                self::$_BASEURL.'services/entreprise/rest/recherche/'.
+                'resumeEntreprise?typeRecherche=ENTREP_HORS_RCS',
+                array(
+                    'json'=>$idsNoRCS,
+                    'headers'=>array('Content-Type'=>'text/plain')
+                )
+            );
+            $items = array_merge(
+                $items, json_decode($resultNoRCS->getBody())->items
+            );
+        }
+        return self::_getArrayFromJSON($items);
     }
 
     /**
      * Convert the JSON list returned by infogreffe.fr
      * to an array of Infogreffe objects
      *
-     * @param array $json JSON data returned by infogreffe.fr
+     * @param array $items Items returned by infogreffe.fr
      *
      * @return array Array of Infogreffe objects
      * */
-    static private function _getArrayFromJSON($json)
+    static private function _getArrayFromJSON($items)
     {
         $return = array();
-        foreach (array(
-            $json->entrepHorsRCSStoreResponse, $json->entrepRCSStoreResponse
-        ) as $store) {
-            foreach ($store->items as $item) {
-                if (isset($item->siren)) {
-                    $return[] = new Infogreffe(
-                        $item->siren, $item->nic,
-                        $item->libelleEntreprise->denomination,
-                        $item->adresse->lignes, $item->adresse->codePostal,
-                        $item->adresse->bureauDistributeur
-                    );
-                }
+        foreach ($items as $item) {
+            if (isset($item->siren)) {
+                $return[] = new Infogreffe(
+                    $item->siren, $item->nic,
+                    $item->libelleEntreprise->denomination,
+                    $item->adresse->lignes, $item->adresse->codePostal,
+                    $item->adresse->bureauDistributeur
+                );
             }
         }
         return $return;
