@@ -13,11 +13,13 @@
 require_once 'vendor/autoload.php';
 use InfogreffeUnofficial\SearchNameCommand;
 use InfogreffeUnofficial\SearchSiretCommand;
+use InfogreffeUnofficial\SearchCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 $application->add(new SearchNameCommand());
 $application->add(new SearchSiretCommand());
+$application->add(new SearchCommand());
 $application->run();
 
 ?>

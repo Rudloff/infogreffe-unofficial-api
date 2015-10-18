@@ -1,6 +1,6 @@
 <?php
 /**
- * SearchNameCommand class
+ * SearchCommand class
  *
  * PHP Version 5.4
  *
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * CLI search by name command
+ * CLI search command
  *
  * PHP Version 5.4
  *
@@ -29,7 +29,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
-class SearchNameCommand extends Command
+class SearchCommand extends Command
 {
     /**
      * Configure command
@@ -38,12 +38,12 @@ class SearchNameCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('search:name')
-            ->setDescription('Search by name')
+            ->setName('search:all')
+            ->setDescription('Search')
             ->addArgument(
-                'name',
+                'query',
                 InputArgument::REQUIRED,
-                'Name to search'
+                'Search query'
             );
     }
 
@@ -55,7 +55,7 @@ class SearchNameCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $result = Infogreffe::searchByName($input->getArgument('name'));
+        $result = Infogreffe::search($input->getArgument('query'));
         if (empty($result)) {
             $output->writeln('<error>No result :/</error>');
         } else {

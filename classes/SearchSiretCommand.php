@@ -1,6 +1,6 @@
 <?php
 /**
- * SearchCommand class
+ * SearchSiretCommand class
  *
  * PHP Version 5.4
  *

@@ -26,8 +26,8 @@ class Infogreffe
 {
     static private $_BASEURL = 'https://www.infogreffe.fr/';
     static private $_JSONURL
-        = 'services/entreprise/rest/recherche/parEntreprise';
-
+        = 'services/entreprise/rest/recherche/';
+//https://www.infogreffe.fr/services/entreprise/rest/recherche/parPhrase?typeProduitMisEnAvant=EXTRAIT&phrase=Pierre%20Rudloff
     /**
      * Infogreffe constructor
      *
@@ -63,7 +63,7 @@ class Infogreffe
     static function searchBySIRET($siret)
     {
         $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', self::$_BASEURL.self::$_JSONURL, array(
+        $response = $client->request('GET', self::$_BASEURL.self::$_JSONURL.'parEntreprise', array(
             'query' => array(
                 'sirenOuSiret' => $siret,
                 'typeEntreprise'=>'TOUS',
@@ -88,12 +88,28 @@ class Infogreffe
     static function searchByName($name)
     {
         $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', self::$_BASEURL.self::$_JSONURL, array(
+        $response = $client->request('GET', self::$_BASEURL.self::$_JSONURL.'parEntreprise', array(
             'query' => array(
                 'deno' => $name,
                 'typeEntreprise'=>'TOUS',
                 'etsRadiees'=>'false',
                 'etabSecondaire'=>'false'
+            )
+        ));
+        $json = $response->getBody();
+        $result = json_decode(
+            $json
+        );
+        return self::_getArrayFromJSON($result);
+    }
+
+    static function search($query)
+    {
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', self::$_BASEURL.self::$_JSONURL.'parPhrase', array(
+            'query' => array(
+                'phrase' => $query,
+                'typeProduitMisEnAvant'=>'EXTRAIT'
             )
         ));
         $json = $response->getBody();
