@@ -56,7 +56,7 @@ class SearchCommandTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'RUDLOFF PIERRE JULES | 75108721400027 | MONSIEUR PIERRE RUDLOFF, '.
-            '87 ROUTE DU POLYGONE, 67100, STRASBOURG, France'.PHP_EOL,
+            '87 ROUTE DU POLYGONE, 67100, STRASBOURG'.PHP_EOL,
             $this->commandTester->getDisplay()
         );
     }
