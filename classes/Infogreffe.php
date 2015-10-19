@@ -46,8 +46,12 @@ class Infogreffe
         foreach ($this->address['lines'] as &$line) {
             $line = trim($line);
         }
-        $this->address['zipcode'] = $zipcode;
-        $this->address['city'] = $city;
+        if (!empty($zipcode)) {
+            $this->address['zipcode'] = $zipcode;
+        }
+        if (!empty($city)) {
+            $this->address['city'] = $city;
+        }
     }
 
     /**
