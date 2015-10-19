@@ -48,7 +48,6 @@ class Infogreffe
         }
         $this->address['zipcode'] = $zipcode;
         $this->address['city'] = $city;
-        $this->address['country'] = 'France';
     }
 
     /**
