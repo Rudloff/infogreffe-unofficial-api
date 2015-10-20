@@ -28,38 +28,44 @@ class InfogreffeTest extends PHPUnit_Framework_TestCase
 {
 
     /**
-     * Test searchByName
+     * Test search
+     * @param string     $query  Search query
+     * @param Infogreffe $result Search result
      * @return void
+     * @dataProvider searchProvider
      * */
-    public function testSearchByName()
+    public function testSearch($query, $result)
     {
+        $results = Infogreffe::search($query);
         $this->assertEquals(
-            array(
-                new Infogreffe(
-                    751087214, '00027', 'RUDLOFF PIERRE JULES',
-                    array('MONSIEUR PIERRE RUDLOFF', '87 ROUTE DU POLYGONE'),
-                    67100, 'STRASBOURG'
-                )
-            ),
-            Infogreffe::searchByName('Pierre Rudloff')
+            $result,
+            $results[0]
         );
     }
 
     /**
-     * Test searchBySIRET
-     * @return void
-     * */
-    public function testSearchBySIRET()
+     * [searchProvider description]
+     * @return [type] [description]
+     */
+    public function searchProvider()
     {
-        $this->assertEquals(
+        return array(
             array(
+                'Pierre Jules Rudloff',
                 new Infogreffe(
                     751087214, '00027', 'RUDLOFF PIERRE JULES',
                     array('MONSIEUR PIERRE RUDLOFF', '87 ROUTE DU POLYGONE'),
                     67100, 'STRASBOURG'
                 )
             ),
-            Infogreffe::searchBySIRET(751087214)
+            array(
+                'Google France',
+                new Infogreffe(
+                    443061841, '00047', 'GOOGLE FRANCE',
+                    array('8 R DE LONDRES'),
+                    75009, 'PARIS'
+                )
+            )
         );
     }
 }

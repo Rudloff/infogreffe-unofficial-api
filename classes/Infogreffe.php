@@ -25,8 +25,9 @@ namespace InfogreffeUnofficial;
 class Infogreffe
 {
     static private $_BASEURL = 'https://www.infogreffe.fr/';
-    static private $_JSONURL
-        = 'services/entreprise/rest/recherche/parEntreprise';
+    public $siret;
+    public $name;
+    public $address;
 
     /**
      * Infogreffe constructor
@@ -48,77 +49,136 @@ class Infogreffe
         foreach ($this->address['lines'] as &$line) {
             $line = trim($line);
         }
-        $this->address['zipcode'] = $zipcode;
-        $this->address['city'] = $city;
-        $this->address['country'] = 'France';
+        if (!empty($zipcode)) {
+            $this->address['zipcode'] = $zipcode;
+        }
+        if (!empty($city)) {
+            $this->address['city'] = $city;
+        }
     }
 
     /**
-     * Search by SIRET
-     *
-     * @param int $siret SIRET
-     *
-     * @return array Array of Infogreffe objects
-     * */
-    static function searchBySIRET($siret)
+     * Search for a company
+     * @param  string $query Query
+     * @return array Results
+     */
+    static function search($query)
     {
-        $json = @file_get_contents(
-            self::$_BASEURL.self::$_JSONURL.'?sirenOuSiret='.$siret.
-            '&typeEntreprise=TOUS&etsRadiees=false&etabSecondaire=false'
+        $client = new \GuzzleHttp\Client(array('cookies' => true));
+        $response = $client->request(
+            'GET', self::$_BASEURL.'services/entreprise/rest/recherche/parPhrase',
+            array(
+                'query' => array(
+                    'phrase' => $query,
+                    'typeProduitMisEnAvant'=>'EXTRAIT'
+                )
+            )
         );
+        $json = $response->getBody();
         $result = json_decode(
             $json
         );
-        if (!is_object($result)) {
-            throw new \Exception('Could not get valid JSON');
-        }
-        return self::_getArrayFromJSON($result);
-    }
 
-    /**
-     * Search by name
-     *
-     * @param string $name Name
-     *
-     * @return array Array of Infogreffe objects
-     * */
-    static function searchByName($name)
-    {
-        $result = json_decode(
-            file_get_contents(
-                self::$_BASEURL.self::$_JSONURL.'?deno='.urlencode($name).
-                '&typeEntreprise=TOUS&etsRadiees=false&etabSecondaire=false'
-            )
+        $client->request(
+            'GET', self::$_BASEURL.'societes/recherche-entreprise-dirigeants/'.
+            'resultats-entreprise-dirigeants.html'
         );
-        return self::_getArrayFromJSON($result);
+        $response = $client->request(
+            'GET', 'https://www.infogreffe.fr/services/entreprise/rest/recherche/'.
+            'derniereRechercheEntreprise'
+        );
+        $response = json_decode($response->getBody());
+        $idsRCS = $idsNoRCS = array();
+        foreach ($response->entrepRCSStoreResponse->items as $result) {
+            if (isset($result->id)) {
+                $idsRCS[] = $result->id;
+            }
+        }
+        foreach ($response->entrepHorsRCSStoreResponse->items as $result) {
+            if (isset($result->id)) {
+                $idsNoRCS[] = $result->id;
+            }
+        }
+        $items = array();
+        if (!empty($idsRCS)) {
+            $resultRCS = $client->request(
+                'POST',
+                self::$_BASEURL.'services/entreprise/rest/recherche/'.
+                'resumeEntreprise?typeRecherche=ENTREP_RCS_ACTIF',
+                array(
+                    'json'=>$idsRCS,
+                    'headers'=>array('Content-Type'=>'text/plain')
+                )
+            );
+            $items = array_merge($items, json_decode($resultRCS->getBody())->items);
+        }
+        if (!empty($idsNoRCS)) {
+            $resultNoRCS = $client->request(
+                'POST',
+                self::$_BASEURL.'services/entreprise/rest/recherche/'.
+                'resumeEntreprise?typeRecherche=ENTREP_HORS_RCS',
+                array(
+                    'json'=>$idsNoRCS,
+                    'headers'=>array('Content-Type'=>'text/plain')
+                )
+            );
+            $items = array_merge(
+                $items, json_decode($resultNoRCS->getBody())->items
+            );
+        }
+        return self::_getArrayFromJSON($items);
     }
 
     /**
      * Convert the JSON list returned by infogreffe.fr
      * to an array of Infogreffe objects
      *
-     * @param array $json JSON data returned by infogreffe.fr
+     * @param array $items Items returned by infogreffe.fr
      *
      * @return array Array of Infogreffe objects
      * */
-    static private function _getArrayFromJSON($json)
+    static private function _getArrayFromJSON($items)
     {
         $return = array();
-        foreach (array(
-            $json->entrepHorsRCSStoreResponse, $json->entrepRCSStoreResponse
-        ) as $store) {
-            foreach ($store->items as $item) {
-                if (isset($item->siren)) {
-                    $return[] = new Infogreffe(
-                        $item->siren, $item->nic,
-                        $item->libelleEntreprise->denomination,
-                        $item->adresse->lignes, $item->adresse->codePostal,
-                        $item->adresse->bureauDistributeur
-                    );
-                }
+        foreach ($items as $item) {
+            if (isset($item->siren)) {
+                $return[] = new Infogreffe(
+                    $item->siren, $item->nic,
+                    $item->libelleEntreprise->denomination,
+                    $item->adresse->lignes, $item->adresse->codePostal,
+                    $item->adresse->bureauDistributeur
+                );
             }
         }
         return $return;
+    }
+
+    /**
+     * Get SIREN number
+     * @return int SIREN
+     */
+    private function _getSiren()
+    {
+        return substr($this->siret, 0, 9);
+    }
+
+    /**
+     * Get escaped name for URL
+     * @return string Escaped name
+     */
+    private function _getEscapedName()
+    {
+        return preg_replace('/[^[:alnum:]]/', '-', strtolower($this->name));
+    }
+
+    /**
+     * Get Infogreffe URL
+     * @return string URL
+     */
+    function getURL()
+    {
+        return self::$_BASEURL.'societes/entreprise-societe/'.
+        $this->_getSiren().'-'.$this->_getEscapedName().'-'.$this->siret.'.html';
     }
 }
 ?>

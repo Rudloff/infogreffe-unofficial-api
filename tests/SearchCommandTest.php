@@ -1,6 +1,6 @@
 <?php
 /**
- * SearchNameCommandTest class
+ * SearchCommandTest class
  *
  * PHP Version 5.4
  *
@@ -11,12 +11,12 @@
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
 
-use InfogreffeUnofficial\SearchNameCommand;
+use InfogreffeUnofficial\SearchCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit tests for SearchNameCommand class
+ * Unit tests for SearchCommand class
  *
  * PHP Version 5.4
  *
@@ -26,7 +26,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
-class SearchNameCommandTest extends PHPUnit_Framework_TestCase
+class SearchCommandTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Setup tests
@@ -35,9 +35,9 @@ class SearchNameCommandTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $application = new Application();
-        $application->add(new SearchNameCommand());
+        $application->add(new SearchCommand());
 
-        $this->command = $application->find('search:name');
+        $this->command = $application->find('search');
         $this->commandTester = new CommandTester($this->command);
     }
 
@@ -50,13 +50,34 @@ class SearchNameCommandTest extends PHPUnit_Framework_TestCase
         $this->commandTester->execute(
             array(
                 'command' => $this->command->getName(),
-                'name'=>'Pierre Rudloff'
+                'query'=>'Pierre Jules Rudloff'
             )
         );
 
         $this->assertEquals(
             'RUDLOFF PIERRE JULES | 75108721400027 | MONSIEUR PIERRE RUDLOFF, '.
-            '87 ROUTE DU POLYGONE, 67100, STRASBOURG, France'.PHP_EOL,
+            '87 ROUTE DU POLYGONE, 67100, STRASBOURG'.PHP_EOL,
+            $this->commandTester->getDisplay()
+        );
+    }
+
+    /**
+     * Test execute with --url
+     * @return void
+     */
+    public function testExecuteWithUrl()
+    {
+        $this->commandTester->execute(
+            array(
+                'command' => $this->command->getName(),
+                'query'=>'Pierre Jules Rudloff',
+                '--url'=>true
+            )
+        );
+
+        $this->assertEquals(
+            'https://www.infogreffe.fr/societes/entreprise-societe/'.
+            '751087214-rudloff-pierre-jules-75108721400027.html'.PHP_EOL,
             $this->commandTester->getDisplay()
         );
     }
@@ -70,7 +91,7 @@ class SearchNameCommandTest extends PHPUnit_Framework_TestCase
         $this->commandTester->execute(
             array(
                 'command' => $this->command->getName(),
-                'name'=>'foobar'
+                'query'=>'foobarbaz'
             )
         );
 
