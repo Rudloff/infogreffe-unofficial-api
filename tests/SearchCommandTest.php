@@ -62,6 +62,27 @@ class SearchCommandTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test execute with --url
+     * @return void
+     */
+    public function testExecuteWithUrl()
+    {
+        $this->commandTester->execute(
+            array(
+                'command' => $this->command->getName(),
+                'query'=>'Pierre Jules Rudloff',
+                '--url'=>true
+            )
+        );
+
+        $this->assertEquals(
+            'https://www.infogreffe.fr/societes/entreprise-societe/'.
+            '751087214-rudloff-pierre-jules-75108721400027.html'.PHP_EOL,
+            $this->commandTester->getDisplay()
+        );
+    }
+
+    /**
      * Test execute with wrong name
      * @return void
      */
