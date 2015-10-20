@@ -25,6 +25,9 @@ namespace InfogreffeUnofficial;
 class Infogreffe
 {
     static private $_BASEURL = 'https://www.infogreffe.fr/';
+    public $siret;
+    public $name;
+    public $address;
 
     /**
      * Infogreffe constructor
@@ -148,6 +151,34 @@ class Infogreffe
             }
         }
         return $return;
+    }
+
+    /**
+     * Get SIREN number
+     * @return int SIREN
+     */
+    private function _getSiren()
+    {
+        return substr($this->siret, 0, 9);
+    }
+
+    /**
+     * Get escaped name for URL
+     * @return string Escaped name
+     */
+    private function _getEscapedName()
+    {
+        return preg_replace('/[^[:alnum:]]/', '-', strtolower($this->name));
+    }
+
+    /**
+     * Get Infogreffe URL
+     * @return string URL
+     */
+    function getURL()
+    {
+        return self::$_BASEURL.'societes/entreprise-societe/'.
+        $this->_getSiren().'-'.$this->_getEscapedName().'-'.$this->siret.'.html';
     }
 }
 ?>

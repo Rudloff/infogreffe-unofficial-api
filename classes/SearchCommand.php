@@ -44,6 +44,12 @@ class SearchCommand extends Command
                 'query',
                 InputArgument::REQUIRED,
                 'Search query'
+            )
+            ->addOption(
+                'url',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, will print the URL of each result'
             );
     }
 
@@ -60,11 +66,17 @@ class SearchCommand extends Command
             $output->writeln('<error>No result :/</error>');
         } else {
             foreach ($result as $org) {
-                $org->address['lines'] = implode(', ', $org->address['lines']);
-                $output->writeln(
-                    $org->name.' | '.$org->siret.' | '.
-                    implode(', ', $org->address)
-                );
+                if ($input->getOption('url')) {
+                    $output->writeln(
+                        $org->getURL()
+                    );
+                } else {
+                    $org->address['lines'] = implode(', ', $org->address['lines']);
+                    $output->writeln(
+                        $org->name.' | '.$org->siret.' | '.
+                        implode(', ', $org->address)
+                    );
+                }
             }
         }
     }
