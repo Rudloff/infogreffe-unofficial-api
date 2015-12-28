@@ -2,11 +2,11 @@
     "name": "rudloff/infogreffe-unofficial-api",
     "description": "Unofficial API for infogreffe.fr",
     "require": {
-        "symfony/console": "~2.7.5",
+        "symfony/console": "~3.0.1",
         "guzzlehttp/guzzle": "~6.1.0"
     },
     "require-dev": {
-        "symfony/var-dumper": "~2.7.5"
+        "symfony/var-dumper": "~3.0.1"
     },
     "license": "LGPL-3.0",
     "autoload": {
