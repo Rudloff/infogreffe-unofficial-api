@@ -3,7 +3,7 @@
     "description": "Unofficial API for infogreffe.fr",
     "require": {
         "symfony/console": "~3.0.0",
-        "guzzlehttp/guzzle": "~6.1.0"
+        "guzzlehttp/guzzle": "~6.2.0"
     },
     "require-dev": {
         "symfony/var-dumper": "~3.0.0"
