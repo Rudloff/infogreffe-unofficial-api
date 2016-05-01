@@ -10,6 +10,7 @@
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
+namespace InfogreffeUnofficial\Test;
 
 use InfogreffeUnofficial\Infogreffe;
 
@@ -24,7 +25,7 @@ use InfogreffeUnofficial\Infogreffe;
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
-class InfogreffeTest extends PHPUnit_Framework_TestCase
+class InfogreffeTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -53,17 +54,23 @@ class InfogreffeTest extends PHPUnit_Framework_TestCase
             array(
                 'Pierre Jules Rudloff',
                 new Infogreffe(
-                    751087214, '00027', 'RUDLOFF PIERRE JULES',
+                    751087214,
+                    '00027',
+                    'RUDLOFF PIERRE JULES',
                     array('MONSIEUR PIERRE RUDLOFF', '87 ROUTE DU POLYGONE'),
-                    67100, 'STRASBOURG'
+                    67100,
+                    'STRASBOURG'
                 )
             ),
             array(
                 'Google France',
                 new Infogreffe(
-                    443061841, '00047', 'GOOGLE FRANCE',
+                    443061841,
+                    '00047',
+                    'GOOGLE FRANCE',
                     array('8 R DE LONDRES'),
-                    75009, 'PARIS'
+                    75009,
+                    'PARIS'
                 )
             )
         );

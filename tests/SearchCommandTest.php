@@ -10,6 +10,7 @@
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
+namespace InfogreffeUnofficial\Test;
 
 use InfogreffeUnofficial\SearchCommand;
 use Symfony\Component\Console\Application;
@@ -26,7 +27,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
-class SearchCommandTest extends PHPUnit_Framework_TestCase
+class SearchCommandTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Setup tests
@@ -53,9 +54,8 @@ class SearchCommandTest extends PHPUnit_Framework_TestCase
                 'query'=>'Pierre Rudloff'
             )
         );
-
-        $this->assertEquals(
-'+------------------------+----------------+----------------------------+---------+
+        $result = <<<EOT
++------------------------+----------------+----------------------------+---------+
 | Name                   | SIRET          | Address                    | Removed |
 +------------------------+----------------+----------------------------+---------+
 | RUDLOFF PIERRE JULES   | 75108721400027 | MONSIEUR PIERRE RUDLOFF    |         |
@@ -65,7 +65,11 @@ class SearchCommandTest extends PHPUnit_Framework_TestCase
 |                        |                | 136 RUE VICTOR HUGO        |         |
 |                        |                | 60280 MARGNY LES COMPIEGNE |         |
 +------------------------+----------------+----------------------------+---------+
-',
+
+EOT;
+
+        $this->assertEquals(
+            $result,
             $this->commandTester->getDisplay()
         );
     }
@@ -83,11 +87,15 @@ class SearchCommandTest extends PHPUnit_Framework_TestCase
                 '--url'=>true
             )
         );
+        $result = <<<EOT
++----------------------------------------------------------------------------------------------------------+
+| https://www.infogreffe.fr/societes/entreprise-societe/751087214-rudloff-pierre-jules-75108721400027.html |
++----------------------------------------------------------------------------------------------------------+
+
+EOT;
 
         $this->assertEquals(
-            '+----------------------------------------------------------------------------------------------------------+'.PHP_EOL.
-            '| https://www.infogreffe.fr/societes/entreprise-societe/751087214-rudloff-pierre-jules-75108721400027.html |'.PHP_EOL.
-            '+----------------------------------------------------------------------------------------------------------+'.PHP_EOL,
+            $result,
             $this->commandTester->getDisplay()
         );
     }
@@ -106,8 +114,8 @@ class SearchCommandTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'No result :/'.PHP_EOL, $this->commandTester->getDisplay()
+            'No result :/'.PHP_EOL,
+            $this->commandTester->getDisplay()
         );
     }
-
 }
