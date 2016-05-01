@@ -55,8 +55,11 @@ class SearchCommandTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'RUDLOFF PIERRE JULES | 75108721400027 | MONSIEUR PIERRE RUDLOFF, '.
-            '87 ROUTE DU POLYGONE, 67100, STRASBOURG'.PHP_EOL,
+            '+----------------------+----------------+------------------------------------------------------------------+---------+'.PHP_EOL.
+            '| Name                 | SIRET          | Address                                                          | Removed |'.PHP_EOL.
+            '+----------------------+----------------+------------------------------------------------------------------+---------+'.PHP_EOL.
+            '| RUDLOFF PIERRE JULES | 75108721400027 | MONSIEUR PIERRE RUDLOFF, 87 ROUTE DU POLYGONE, 67100, STRASBOURG |         |'.PHP_EOL.
+            '+----------------------+----------------+------------------------------------------------------------------+---------+'.PHP_EOL,
             $this->commandTester->getDisplay()
         );
     }
@@ -76,8 +79,9 @@ class SearchCommandTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'https://www.infogreffe.fr/societes/entreprise-societe/'.
-            '751087214-rudloff-pierre-jules-75108721400027.html'.PHP_EOL,
+            '+----------------------------------------------------------------------------------------------------------+'.PHP_EOL.
+            '| https://www.infogreffe.fr/societes/entreprise-societe/751087214-rudloff-pierre-jules-75108721400027.html |'.PHP_EOL.
+            '+----------------------------------------------------------------------------------------------------------+'.PHP_EOL,
             $this->commandTester->getDisplay()
         );
     }

@@ -100,9 +100,11 @@ class Infogreffe
                 $idsRCS[] = $result->id;
             }
         }
-        foreach ($response->entrepRadieeStoreResponse->items as $result) {
-            if (isset($result->id)) {
-                $idsRemovedRCS[] = $result->id;
+        if (isset($response->entrepRadieeStoreResponse)) {
+            foreach ($response->entrepRadieeStoreResponse->items as $result) {
+                if (isset($result->id)) {
+                    $idsRemovedRCS[] = $result->id;
+                }
             }
         }
         foreach ($response->entrepHorsRCSStoreResponse->items as $result) {
