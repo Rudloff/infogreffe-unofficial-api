@@ -50,16 +50,17 @@ class SearchCommandTest extends PHPUnit_Framework_TestCase
         $this->commandTester->execute(
             array(
                 'command' => $this->command->getName(),
-                'query'=>'Pierre Jules Rudloff'
+                'query'=>'Pierre Rudloff'
             )
         );
 
         $this->assertEquals(
-            '+----------------------+----------------+------------------------------------------------------------------+---------+'.PHP_EOL.
-            '| Name                 | SIRET          | Address                                                          | Removed |'.PHP_EOL.
-            '+----------------------+----------------+------------------------------------------------------------------+---------+'.PHP_EOL.
-            '| RUDLOFF PIERRE JULES | 75108721400027 | MONSIEUR PIERRE RUDLOFF, 87 ROUTE DU POLYGONE, 67100, STRASBOURG |         |'.PHP_EOL.
-            '+----------------------+----------------+------------------------------------------------------------------+---------+'.PHP_EOL,
+            '+------------------------+----------------+------------------------------------------------------------------+---------+'.PHP_EOL.
+            '| Name                   | SIRET          | Address                                                          | Removed |'.PHP_EOL.
+            '+------------------------+----------------+------------------------------------------------------------------+---------+'.PHP_EOL.
+            '| RUDLOFF PIERRE JULES   | 75108721400027 | MONSIEUR PIERRE RUDLOFF, 87 ROUTE DU POLYGONE, 67100, STRASBOURG |         |'.PHP_EOL.
+            '| RUDLOFF MATHIEU PIERRE | 52256102600017 | APP 1064, 136 RUE VICTOR HUGO, 60280, MARGNY LES COMPIEGNE       | ❌       |'.PHP_EOL.
+            '+------------------------+----------------+------------------------------------------------------------------+---------+'.PHP_EOL,
             $this->commandTester->getDisplay()
         );
     }
