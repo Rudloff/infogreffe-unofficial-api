@@ -28,6 +28,7 @@ class Infogreffe
     public $siret;
     public $name;
     public $address;
+    public $removed;
 
     /**
      * Infogreffe constructor
@@ -41,7 +42,7 @@ class Infogreffe
      *
      * @return void
      * */
-    function __construct($siren, $nic, $denomination, $address, $zipcode, $city)
+    function __construct($siren, $nic, $denomination, $address, $zipcode, $city, $removed)
     {
         $this->siret = $siren.$nic;
         $this->name = $denomination;
@@ -55,6 +56,7 @@ class Infogreffe
         if (!empty($city)) {
             $this->address['city'] = $city;
         }
+        $this->removed = $removed;
     }
 
     /**
@@ -94,6 +96,11 @@ class Infogreffe
                 $idsRCS[] = $result->id;
             }
         }
+        foreach ($response->entrepRadieeStoreResponse->items as $result) {
+            if (isset($result->id)) {
+                $idsRemovedRCS[] = $result->id;
+            }
+        }
         foreach ($response->entrepHorsRCSStoreResponse->items as $result) {
             if (isset($result->id)) {
                 $idsNoRCS[] = $result->id;
@@ -107,6 +114,18 @@ class Infogreffe
                 'resumeEntreprise?typeRecherche=ENTREP_RCS_ACTIF',
                 array(
                     'json'=>$idsRCS,
+                    'headers'=>array('Content-Type'=>'text/plain')
+                )
+            );
+            $items = array_merge($items, json_decode($resultRCS->getBody())->items);
+        }
+        if (!empty($idsRemovedRCS)) {
+            $resultRCS = $client->request(
+                'POST',
+                self::$_BASEURL.'services/entreprise/rest/recherche/'.
+                'resumeEntreprise?typeRecherche=ENTREP_RCS_RADIES',
+                array(
+                    'json'=>$idsRemovedRCS,
                     'headers'=>array('Content-Type'=>'text/plain')
                 )
             );
@@ -146,7 +165,8 @@ class Infogreffe
                     $item->siren, $item->nic,
                     $item->libelleEntreprise->denomination,
                     $item->adresse->lignes, $item->adresse->codePostal,
-                    $item->adresse->bureauDistributeur
+                    $item->adresse->bureauDistributeur,
+                    $item->radie
                 );
             }
         }
