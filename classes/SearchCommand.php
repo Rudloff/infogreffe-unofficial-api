@@ -81,9 +81,9 @@ class SearchCommand extends Command
                 if ($input->getOption('url')) {
                     $table->addRow(array($org->getURL()));
                 } else {
-                    $org->address['lines'] = implode(', ', $org->address['lines']);
+                    $org->address['lines'] = implode(PHP_EOL, $org->address['lines']);
                     $rows = array(
-                        $org->name, $org->siret, implode(', ', $org->address)
+                        $org->name, $org->siret, $org->address['lines'].PHP_EOL.$org->address['zipcode'].' '.$org->address['city']
                     );
                     if ($org->removed) {
                         $rows[] = '❌';
