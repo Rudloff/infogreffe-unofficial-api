@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
 
 /**
  * CLI search command
@@ -65,19 +66,34 @@ class SearchCommand extends Command
         if (empty($result)) {
             $output->writeln('<error>No result :/</error>');
         } else {
+            $table = new Table($output);
+            if (!$input->getOption('url')) {
+                $table->setHeaders(
+                    array(
+                        'Name',
+                        'SIRET',
+                        'Address',
+                        'Removed'
+                    )
+                );
+            }
             foreach ($result as $org) {
                 if ($input->getOption('url')) {
-                    $output->writeln(
-                        $org->getURL()
-                    );
+                    $table->addRow(array($org->getURL()));
                 } else {
                     $org->address['lines'] = implode(', ', $org->address['lines']);
-                    $output->writeln(
-                        $org->name.' | '.$org->siret.' | '.
-                        implode(', ', $org->address)
+                    $rows = array(
+                        $org->name, $org->siret, implode(', ', $org->address)
                     );
+                    if ($org->removed) {
+                        $rows[] = '❌';
+                    } else {
+                        $rows[] = '';
+                    }
+                    $table->addRow($rows);
                 }
             }
+            $table->render();
         }
     }
 }
