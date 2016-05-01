@@ -43,7 +43,7 @@ class Infogreffe
      *
      * @return void
      * */
-    public function __construct($siren, $nic, $denomination, $address, $zipcode, $city, $removed)
+    public function __construct($siren, $nic, $denomination, $address, $zipcode, $city, $removed = false)
     {
         $this->siret = $siren.$nic;
         $this->name = $denomination;
