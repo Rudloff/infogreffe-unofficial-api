@@ -11,6 +11,7 @@
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
 namespace InfogreffeUnofficial;
+
 /**
  * Class used to search data on infogreffe.fr
  *
@@ -24,7 +25,7 @@ namespace InfogreffeUnofficial;
  * */
 class Infogreffe
 {
-    static private $_BASEURL = 'https://www.infogreffe.fr/';
+    static private $BASEURL = 'https://www.infogreffe.fr/';
     public $siret;
     public $name;
     public $address;
@@ -42,7 +43,7 @@ class Infogreffe
      *
      * @return void
      * */
-    function __construct($siren, $nic, $denomination, $address, $zipcode, $city, $removed)
+    public function __construct($siren, $nic, $denomination, $address, $zipcode, $city, $removed)
     {
         $this->siret = $siren.$nic;
         $this->name = $denomination;
@@ -64,11 +65,12 @@ class Infogreffe
      * @param  string $query Query
      * @return array Results
      */
-    static function search($query)
+    public static function search($query)
     {
         $client = new \GuzzleHttp\Client(array('cookies' => true));
         $response = $client->request(
-            'GET', self::$_BASEURL.'services/entreprise/rest/recherche/parPhrase',
+            'GET',
+            self::$BASEURL.'services/entreprise/rest/recherche/parPhrase',
             array(
                 'query' => array(
                     'phrase' => $query,
@@ -82,11 +84,13 @@ class Infogreffe
         );
 
         $client->request(
-            'GET', self::$_BASEURL.'societes/recherche-entreprise-dirigeants/'.
+            'GET',
+            self::$BASEURL.'societes/recherche-entreprise-dirigeants/'.
             'resultats-entreprise-dirigeants.html'
         );
         $response = $client->request(
-            'GET', 'https://www.infogreffe.fr/services/entreprise/rest/recherche/'.
+            'GET',
+            'https://www.infogreffe.fr/services/entreprise/rest/recherche/'.
             'derniereRechercheEntreprise'
         );
         $response = json_decode($response->getBody());
@@ -110,7 +114,7 @@ class Infogreffe
         if (!empty($idsRCS)) {
             $resultRCS = $client->request(
                 'POST',
-                self::$_BASEURL.'services/entreprise/rest/recherche/'.
+                self::$BASEURL.'services/entreprise/rest/recherche/'.
                 'resumeEntreprise?typeRecherche=ENTREP_RCS_ACTIF',
                 array(
                     'json'=>$idsRCS,
@@ -122,7 +126,7 @@ class Infogreffe
         if (!empty($idsRemovedRCS)) {
             $resultRCS = $client->request(
                 'POST',
-                self::$_BASEURL.'services/entreprise/rest/recherche/'.
+                self::$BASEURL.'services/entreprise/rest/recherche/'.
                 'resumeEntreprise?typeRecherche=ENTREP_RCS_RADIES',
                 array(
                     'json'=>$idsRemovedRCS,
@@ -134,7 +138,7 @@ class Infogreffe
         if (!empty($idsNoRCS)) {
             $resultNoRCS = $client->request(
                 'POST',
-                self::$_BASEURL.'services/entreprise/rest/recherche/'.
+                self::$BASEURL.'services/entreprise/rest/recherche/'.
                 'resumeEntreprise?typeRecherche=ENTREP_HORS_RCS',
                 array(
                     'json'=>$idsNoRCS,
@@ -142,10 +146,11 @@ class Infogreffe
                 )
             );
             $items = array_merge(
-                $items, json_decode($resultNoRCS->getBody())->items
+                $items,
+                json_decode($resultNoRCS->getBody())->items
             );
         }
-        return self::_getArrayFromJSON($items);
+        return self::getArrayFromJSON($items);
     }
 
     /**
@@ -156,15 +161,17 @@ class Infogreffe
      *
      * @return array Array of Infogreffe objects
      * */
-    static private function _getArrayFromJSON($items)
+    private static function getArrayFromJSON($items)
     {
         $return = array();
         foreach ($items as $item) {
             if (isset($item->siren)) {
                 $return[] = new Infogreffe(
-                    $item->siren, $item->nic,
+                    $item->siren,
+                    $item->nic,
                     $item->libelleEntreprise->denomination,
-                    $item->adresse->lignes, $item->adresse->codePostal,
+                    $item->adresse->lignes,
+                    $item->adresse->codePostal,
                     $item->adresse->bureauDistributeur,
                     $item->radie
                 );
@@ -177,7 +184,7 @@ class Infogreffe
      * Get SIREN number
      * @return int SIREN
      */
-    private function _getSiren()
+    private function getSiren()
     {
         return substr($this->siret, 0, 9);
     }
@@ -186,7 +193,7 @@ class Infogreffe
      * Get escaped name for URL
      * @return string Escaped name
      */
-    private function _getEscapedName()
+    private function getEscapedName()
     {
         return preg_replace('/[^[:alnum:]]/', '-', strtolower($this->name));
     }
@@ -195,10 +202,9 @@ class Infogreffe
      * Get Infogreffe URL
      * @return string URL
      */
-    function getURL()
+    public function getURL()
     {
-        return self::$_BASEURL.'societes/entreprise-societe/'.
-        $this->_getSiren().'-'.$this->_getEscapedName().'-'.$this->siret.'.html';
+        return self::$BASEURL.'societes/entreprise-societe/'.
+        $this->getSiren().'-'.$this->getEscapedName().'-'.$this->siret.'.html';
     }
 }
-?>
