@@ -83,7 +83,8 @@ class SearchCommand extends Command
                 } else {
                     $org->address['lines'] = implode(PHP_EOL, $org->address['lines']);
                     $rows = array(
-                        $org->name, $org->siret, $org->address['lines'].PHP_EOL.$org->address['zipcode'].' '.$org->address['city']
+                        $org->name, $org->siret,
+                        $org->address['lines'].PHP_EOL.$org->address['zipcode'].' '.$org->address['city']
                     );
                     if ($org->removed) {
                         $rows[] = '❌';
