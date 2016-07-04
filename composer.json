@@ -6,7 +6,8 @@
         "guzzlehttp/guzzle": "~6.2.0"
     },
     "require-dev": {
-        "symfony/var-dumper": "~3.0.0"
+        "symfony/var-dumper": "~3.0.0",
+        "psr/log": "~1.0.0"
     },
     "license": "LGPL-3.0",
     "autoload": {
