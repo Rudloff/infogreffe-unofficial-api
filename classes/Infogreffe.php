@@ -78,10 +78,6 @@ class Infogreffe
                 )
             )
         );
-        $json = $response->getBody();
-        $result = json_decode(
-            $json
-        );
 
         $client->request(
             'GET',
