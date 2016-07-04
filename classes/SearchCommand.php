@@ -18,6 +18,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Logger\ConsoleLogger;
+use Psr\Log\LogLevel;
 
 /**
  * CLI search command
@@ -51,6 +53,11 @@ class SearchCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'If set, will print the URL of each result'
+            )->addOption(
+                'debug',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, will print every HTTP query'
             );
     }
 
@@ -62,7 +69,15 @@ class SearchCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $result = Infogreffe::search($input->getArgument('query'));
+        if ($input->getOption('debug')) {
+            $verbosityLevelMap = array(
+                LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+                LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            );
+        } else {
+            $verbosityLevelMap = array();
+        }
+        $result = Infogreffe::search($input->getArgument('query'), new ConsoleLogger($output, $verbosityLevelMap));
         if (empty($result)) {
             $output->writeln('<error>No result :/</error>');
         } else {

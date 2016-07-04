@@ -65,10 +65,17 @@ class Infogreffe
      * @param  string $query Query
      * @return array Results
      */
-    public static function search($query)
+    public static function search($query, $logger = null)
     {
-        $client = new \GuzzleHttp\Client(array('cookies' => true));
-        $response = $client->request(
+        $handler = \GuzzleHttp\HandlerStack::create();
+        if (isset($logger)) {
+            $handler->push(\GuzzleHttp\Middleware::log(
+                $logger,
+                new \GuzzleHttp\MessageFormatter('{req_headers}'.PHP_EOL.'{req_body}')
+            ));
+        }
+        $client = new \GuzzleHttp\Client(array('cookies' => true, 'handler'=>$handler));
+        $client->request(
             'GET',
             self::$BASEURL.'services/entreprise/rest/recherche/parPhrase',
             array(
