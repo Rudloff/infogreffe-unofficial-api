@@ -1,38 +1,40 @@
 <?php
 /**
- * Infogreffe class
+ * Infogreffe class.
  *
  * PHP Version 5.4
  *
  * @category API
- * @package  Infogreffe
+ *
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
+ *
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
 namespace InfogreffeUnofficial;
 
 /**
- * Class used to search data on infogreffe.fr
+ * Class used to search data on infogreffe.fr.
  *
  * PHP Version 5.4
  *
  * @category API
- * @package  Infogreffe
+ *
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
+ *
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
 class Infogreffe
 {
-    static private $BASEURL = 'https://www.infogreffe.fr/';
+    private static $BASEURL = 'https://www.infogreffe.fr/';
     public $siret;
     public $name;
     public $address;
     public $removed;
 
     /**
-     * Infogreffe constructor
+     * Infogreffe constructor.
      *
      * @param int    $siren        SIREN
      * @param int    $nic          NIC
@@ -61,8 +63,10 @@ class Infogreffe
     }
 
     /**
-     * Search for a company
-     * @param  string $query Query
+     * Search for a company.
+     *
+     * @param string $query Query
+     *
      * @return array Results
      */
     public static function search($query, $logger = null)
@@ -74,16 +78,16 @@ class Infogreffe
                 new \GuzzleHttp\MessageFormatter('{req_headers}'.PHP_EOL.'{req_body}')
             ));
         }
-        $client = new \GuzzleHttp\Client(array('cookies' => true, 'handler'=>$handler));
+        $client = new \GuzzleHttp\Client(['cookies' => true, 'handler' => $handler]);
         $client->request(
             'GET',
             self::$BASEURL.'services/entreprise/rest/recherche/parPhrase',
-            array(
-                'query' => array(
-                    'phrase' => $query,
-                    'typeProduitMisEnAvant'=>'EXTRAIT'
-                )
-            )
+            [
+                'query' => [
+                    'phrase'                => $query,
+                    'typeProduitMisEnAvant' => 'EXTRAIT',
+                ],
+            ]
         );
 
         $client->request(
@@ -97,7 +101,7 @@ class Infogreffe
             'derniereRechercheEntreprise'
         );
         $response = json_decode($response->getBody());
-        $idsRCS = $idsNoRCS = array();
+        $idsRCS = $idsNoRCS = [];
         foreach ($response->entrepRCSStoreResponse->items as $result) {
             if (isset($result->id)) {
                 $idsRCS[] = $result->id;
@@ -115,16 +119,16 @@ class Infogreffe
                 $idsNoRCS[] = $result->id;
             }
         }
-        $items = array();
+        $items = [];
         if (!empty($idsRCS)) {
             $resultRCS = $client->request(
                 'POST',
                 self::$BASEURL.'services/entreprise/rest/recherche/'.
                 'resumeEntreprise?typeRecherche=ENTREP_RCS_ACTIF',
-                array(
-                    'json'=>$idsRCS,
-                    'headers'=>array('Content-Type'=>'text/plain')
-                )
+                [
+                    'json'    => $idsRCS,
+                    'headers' => ['Content-Type' => 'text/plain'],
+                ]
             );
             $items = array_merge($items, json_decode($resultRCS->getBody())->items);
         }
@@ -133,10 +137,10 @@ class Infogreffe
                 'POST',
                 self::$BASEURL.'services/entreprise/rest/recherche/'.
                 'resumeEntreprise?typeRecherche=ENTREP_RCS_RADIES',
-                array(
-                    'json'=>$idsRemovedRCS,
-                    'headers'=>array('Content-Type'=>'text/plain')
-                )
+                [
+                    'json'    => $idsRemovedRCS,
+                    'headers' => ['Content-Type' => 'text/plain'],
+                ]
             );
             $items = array_merge($items, json_decode($resultRCS->getBody())->items);
         }
@@ -145,22 +149,23 @@ class Infogreffe
                 'POST',
                 self::$BASEURL.'services/entreprise/rest/recherche/'.
                 'resumeEntreprise?typeRecherche=ENTREP_HORS_RCS',
-                array(
-                    'json'=>$idsNoRCS,
-                    'headers'=>array('Content-Type'=>'text/plain')
-                )
+                [
+                    'json'    => $idsNoRCS,
+                    'headers' => ['Content-Type' => 'text/plain'],
+                ]
             );
             $items = array_merge(
                 $items,
                 json_decode($resultNoRCS->getBody())->items
             );
         }
+
         return self::getArrayFromJSON($items);
     }
 
     /**
      * Convert the JSON list returned by infogreffe.fr
-     * to an array of Infogreffe objects
+     * to an array of Infogreffe objects.
      *
      * @param array $items Items returned by infogreffe.fr
      *
@@ -168,10 +173,10 @@ class Infogreffe
      * */
     private static function getArrayFromJSON($items)
     {
-        $return = array();
+        $return = [];
         foreach ($items as $item) {
             if (isset($item->siren)) {
-                $return[] = new Infogreffe(
+                $return[] = new self(
                     $item->siren,
                     $item->nic,
                     $item->libelleEntreprise->denomination,
@@ -182,11 +187,13 @@ class Infogreffe
                 );
             }
         }
+
         return $return;
     }
 
     /**
-     * Get SIREN number
+     * Get SIREN number.
+     *
      * @return int SIREN
      */
     private function getSiren()
@@ -195,7 +202,8 @@ class Infogreffe
     }
 
     /**
-     * Get escaped name for URL
+     * Get escaped name for URL.
+     *
      * @return string Escaped name
      */
     private function getEscapedName()
@@ -204,7 +212,8 @@ class Infogreffe
     }
 
     /**
-     * Get Infogreffe URL
+     * Get Infogreffe URL.
+     *
      * @return string URL
      */
     public function getURL()
