@@ -1,13 +1,14 @@
 <?php
 /**
- * SearchCommandTest class
+ * SearchCommandTest class.
  *
  * PHP Version 5.4
  *
  * @category API
- * @package  Infogreffe
+ *
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
+ *
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
 namespace InfogreffeUnofficial\Test;
@@ -17,20 +18,22 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Unit tests for SearchCommand class
+ * Unit tests for SearchCommand class.
  *
  * PHP Version 5.4
  *
  * @category API
- * @package  Infogreffe
+ *
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  LGPL https://www.gnu.org/copyleft/lesser.html
+ *
  * @link     https://github.com/Rudloff/infogreffe-unofficial-api
  * */
 class SearchCommandTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Setup tests
+     * Setup tests.
+     *
      * @return void
      */
     protected function setUp()
@@ -43,18 +46,19 @@ class SearchCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test execute
+     * Test execute.
+     *
      * @return void
      */
     public function testExecute()
     {
         $this->commandTester->execute(
-            array(
+            [
                 'command' => $this->command->getName(),
-                'query'=>'Pierre Rudloff'
-            )
+                'query'   => 'Pierre Rudloff',
+            ]
         );
-        $result = <<<EOT
+        $result = <<<'EOT'
 +------------------------+----------------+----------------------------+---------+
 | Name                   | SIRET          | Address                    | Removed |
 +------------------------+----------------+----------------------------+---------+
@@ -75,19 +79,20 @@ EOT;
     }
 
     /**
-     * Test execute with --url
+     * Test execute with --url.
+     *
      * @return void
      */
     public function testExecuteWithUrl()
     {
         $this->commandTester->execute(
-            array(
+            [
                 'command' => $this->command->getName(),
-                'query'=>'Pierre Jules Rudloff',
-                '--url'=>true
-            )
+                'query'   => 'Pierre Jules Rudloff',
+                '--url'   => true,
+            ]
         );
-        $result = <<<EOT
+        $result = <<<'EOT'
 +----------------------------------------------------------------------------------------------------------+
 | https://www.infogreffe.fr/societes/entreprise-societe/751087214-rudloff-pierre-jules-75108721400027.html |
 +----------------------------------------------------------------------------------------------------------+
@@ -101,16 +106,17 @@ EOT;
     }
 
     /**
-     * Test execute with wrong name
+     * Test execute with wrong name.
+     *
      * @return void
      */
     public function testExecuteError()
     {
         $this->commandTester->execute(
-            array(
+            [
                 'command' => $this->command->getName(),
-                'query'=>'foobarbaz'
-            )
+                'query'   => 'foobarbaz',
+            ]
         );
 
         $this->assertEquals(
