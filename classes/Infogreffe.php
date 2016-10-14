@@ -47,7 +47,8 @@ class Infogreffe
     public $removed;
 
     /**
-     * Guzzle client
+     * Guzzle client.
+     *
      * @var \GuzzleHttp\Client
      */
     private static $client;
@@ -81,9 +82,11 @@ class Infogreffe
     }
 
     /**
-     * Get detailed info on companies from API
-     * @param  int[]  $ids  IDs to look for
-     * @param  string $type Type of search
+     * Get detailed info on companies from API.
+     *
+     * @param int[]  $ids  IDs to look for
+     * @param string $type Type of search
+     *
      * @return array
      */
     private function getItems($ids, $type)
@@ -97,6 +100,7 @@ class Infogreffe
                 'headers' => ['Content-Type' => 'text/plain'],
             ]
         );
+
         return json_decode($resultRCS->getBody())->items;
     }
 
