@@ -12,31 +12,36 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 class Infogreffe
 {
     /**
-     * Base API URL
+     * Base API URL.
+     *
      * @var string
      */
     const BASEURL = 'https://www.infogreffe.fr/';
 
     /**
-     * SIRET
+     * SIRET.
+     *
      * @var int
      */
     public $siret;
 
     /**
-     * Company name
+     * Company name.
+     *
      * @var string
      */
     public $name;
 
     /**
-     * Company address
+     * Company address.
+     *
      * @var string[]
      */
     public $address;
 
     /**
      * Has the company been removed from the registry?
+     *
      * @var bool
      */
     public $removed;
@@ -44,13 +49,13 @@ class Infogreffe
     /**
      * Infogreffe constructor.
      *
-     * @param int    $siren        SIREN
-     * @param int    $nic          NIC
+     * @param int      $siren        SIREN
+     * @param int      $nic          NIC
      * @param string[] $denomination Name
-     * @param array  $address      Address (array with lines)
-     * @param int    $zipcode      ZIP code
-     * @param string $city         City
-     * @param bool   $removed      Has the company been removed from the registry?
+     * @param array    $address      Address (array with lines)
+     * @param int      $zipcode      ZIP code
+     * @param string   $city         City
+     * @param bool     $removed      Has the company been removed from the registry?
      * */
     public function __construct($siren, $nic, $denomination, $address, $zipcode, $city, $removed = false)
     {
