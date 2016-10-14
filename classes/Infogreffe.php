@@ -27,7 +27,7 @@ namespace InfogreffeUnofficial;
  * */
 class Infogreffe
 {
-    private static $BASEURL = 'https://www.infogreffe.fr/';
+    const BASEURL = 'https://www.infogreffe.fr/';
     public $siret;
     public $name;
     public $address;
@@ -81,7 +81,7 @@ class Infogreffe
         $client = new \GuzzleHttp\Client(['cookies' => true, 'handler' => $handler]);
         $client->request(
             'GET',
-            self::$BASEURL.'services/entreprise/rest/recherche/parPhrase',
+            self::BASEURL.'services/entreprise/rest/recherche/parPhrase',
             [
                 'query' => [
                     'phrase'                => $query,
@@ -92,7 +92,7 @@ class Infogreffe
 
         $client->request(
             'GET',
-            self::$BASEURL.'societes/recherche-entreprise-dirigeants/'.
+            self::BASEURL.'societes/recherche-entreprise-dirigeants/'.
             'resultats-entreprise-dirigeants.html'
         );
         $response = $client->request(
@@ -123,7 +123,7 @@ class Infogreffe
         if (!empty($idsRCS)) {
             $resultRCS = $client->request(
                 'POST',
-                self::$BASEURL.'services/entreprise/rest/recherche/'.
+                self::BASEURL.'services/entreprise/rest/recherche/'.
                 'resumeEntreprise?typeRecherche=ENTREP_RCS_ACTIF',
                 [
                     'json'    => $idsRCS,
@@ -135,7 +135,7 @@ class Infogreffe
         if (!empty($idsRemovedRCS)) {
             $resultRCS = $client->request(
                 'POST',
-                self::$BASEURL.'services/entreprise/rest/recherche/'.
+                self::BASEURL.'services/entreprise/rest/recherche/'.
                 'resumeEntreprise?typeRecherche=ENTREP_RCS_RADIES',
                 [
                     'json'    => $idsRemovedRCS,
@@ -147,7 +147,7 @@ class Infogreffe
         if (!empty($idsNoRCS)) {
             $resultNoRCS = $client->request(
                 'POST',
-                self::$BASEURL.'services/entreprise/rest/recherche/'.
+                self::BASEURL.'services/entreprise/rest/recherche/'.
                 'resumeEntreprise?typeRecherche=ENTREP_HORS_RCS',
                 [
                     'json'    => $idsNoRCS,
@@ -218,7 +218,7 @@ class Infogreffe
      */
     public function getURL()
     {
-        return self::$BASEURL.'societes/entreprise-societe/'.
+        return self::BASEURL.'societes/entreprise-societe/'.
         $this->getSiren().'-'.$this->getEscapedName().'-'.$this->siret.'.html';
     }
 }
