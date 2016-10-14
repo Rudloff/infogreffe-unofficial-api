@@ -47,6 +47,12 @@ class Infogreffe
     public $removed;
 
     /**
+     * Guzzle client
+     * @var \GuzzleHttp\Client
+     */
+    private static $client;
+
+    /**
      * Infogreffe constructor.
      *
      * @param int      $siren        SIREN
@@ -75,6 +81,26 @@ class Infogreffe
     }
 
     /**
+     * Get detailed info on companies from API
+     * @param  int[]  $ids  IDs to look for
+     * @param  string $type Type of search
+     * @return array
+     */
+    private function getItems($ids, $type)
+    {
+        $resultRCS = self::$client->request(
+            'POST',
+            self::BASEURL.'services/entreprise/rest/recherche/'.
+            'resumeEntreprise?typeRecherche='.$type,
+            [
+                'json'    => $ids,
+                'headers' => ['Content-Type' => 'text/plain'],
+            ]
+        );
+        return json_decode($resultRCS->getBody())->items;
+    }
+
+    /**
      * Search for a company.
      *
      * @param string $query Query
@@ -90,8 +116,8 @@ class Infogreffe
                 new \GuzzleHttp\MessageFormatter('{req_headers}'.PHP_EOL.'{req_body}')
             ));
         }
-        $client = new \GuzzleHttp\Client(['cookies' => true, 'handler' => $handler]);
-        $client->request(
+        self::$client = new \GuzzleHttp\Client(['cookies' => true, 'handler' => $handler]);
+        self::$client->request(
             'GET',
             self::BASEURL.'services/entreprise/rest/recherche/parPhrase',
             [
@@ -102,12 +128,12 @@ class Infogreffe
             ]
         );
 
-        $client->request(
+        self::$client->request(
             'GET',
             self::BASEURL.'societes/recherche-entreprise-dirigeants/'.
             'resultats-entreprise-dirigeants.html'
         );
-        $response = $client->request(
+        $response = self::$client->request(
             'GET',
             'https://www.infogreffe.fr/services/entreprise/rest/recherche/'.
             'derniereRechercheEntreprise'
@@ -133,43 +159,13 @@ class Infogreffe
         }
         $items = [];
         if (!empty($idsRCS)) {
-            $resultRCS = $client->request(
-                'POST',
-                self::BASEURL.'services/entreprise/rest/recherche/'.
-                'resumeEntreprise?typeRecherche=ENTREP_RCS_ACTIF',
-                [
-                    'json'    => $idsRCS,
-                    'headers' => ['Content-Type' => 'text/plain'],
-                ]
-            );
-            $items = array_merge($items, json_decode($resultRCS->getBody())->items);
+            $items = array_merge($items, self::getItems($idsRCS, 'ENTREP_RCS_ACTIF'));
         }
         if (!empty($idsRemovedRCS)) {
-            $resultRCS = $client->request(
-                'POST',
-                self::BASEURL.'services/entreprise/rest/recherche/'.
-                'resumeEntreprise?typeRecherche=ENTREP_RCS_RADIES',
-                [
-                    'json'    => $idsRemovedRCS,
-                    'headers' => ['Content-Type' => 'text/plain'],
-                ]
-            );
-            $items = array_merge($items, json_decode($resultRCS->getBody())->items);
+            $items = array_merge($items, self::getItems($idsRemovedRCS, 'ENTREP_RCS_RADIES'));
         }
         if (!empty($idsNoRCS)) {
-            $resultNoRCS = $client->request(
-                'POST',
-                self::BASEURL.'services/entreprise/rest/recherche/'.
-                'resumeEntreprise?typeRecherche=ENTREP_HORS_RCS',
-                [
-                    'json'    => $idsNoRCS,
-                    'headers' => ['Content-Type' => 'text/plain'],
-                ]
-            );
-            $items = array_merge(
-                $items,
-                json_decode($resultNoRCS->getBody())->items
-            );
+            $items = array_merge($items, self::getItems($idsNoRCS, 'ENTREP_HORS_RCS'));
         }
 
         return self::getArrayFromJSON($items);
