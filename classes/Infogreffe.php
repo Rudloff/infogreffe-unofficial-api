@@ -89,7 +89,7 @@ class Infogreffe
      *
      * @return array
      */
-    private function getItems($ids, $type)
+    private static function getItems($ids, $type)
     {
         $resultRCS = self::$client->request(
             'POST',
