@@ -59,7 +59,7 @@ class Infogreffe
      * */
     public function __construct($siren, $nic, $denomination, $address, $zipcode, $city, $removed = false)
     {
-        $this->siret = (int) $siren.$nic;
+        $this->siret = intval($siren.$nic);
         $this->name = $denomination;
         $this->address['lines'] = $address;
         foreach ($this->address['lines'] as &$line) {
