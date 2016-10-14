@@ -1,16 +1,7 @@
 <?php
 /**
  * SearchCommandTest class.
- *
- * PHP Version 5.4
- *
- * @category API
- *
- * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  LGPL https://www.gnu.org/copyleft/lesser.html
- *
- * @link     https://github.com/Rudloff/infogreffe-unofficial-api
- * */
+ */
 namespace InfogreffeUnofficial\Test;
 
 use InfogreffeUnofficial\SearchCommand;
@@ -19,16 +10,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Unit tests for SearchCommand class.
- *
- * PHP Version 5.4
- *
- * @category API
- *
- * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  LGPL https://www.gnu.org/copyleft/lesser.html
- *
- * @link     https://github.com/Rudloff/infogreffe-unofficial-api
- * */
+ */
 class SearchCommandTest extends \PHPUnit_Framework_TestCase
 {
     /**

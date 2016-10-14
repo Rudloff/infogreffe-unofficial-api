@@ -10,6 +10,7 @@
     "grunt-fixpack": "~0.1.0",
     "grunt-jsonlint": "~1.1.0",
     "grunt-phpcs": "~0.4.0",
+    "grunt-phpdocumentor": "~0.4.1",
     "grunt-phpunit": "~0.3.6"
   },
   "homepage": "https://github.com/Rudloff/infogreffe-unofficial-api",

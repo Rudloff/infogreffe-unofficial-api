@@ -1,36 +1,44 @@
 <?php
 /**
  * Infogreffe class.
- *
- * PHP Version 5.4
- *
- * @category API
- *
- * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  LGPL https://www.gnu.org/copyleft/lesser.html
- *
- * @link     https://github.com/Rudloff/infogreffe-unofficial-api
- * */
+ */
 namespace InfogreffeUnofficial;
 
+use Symfony\Component\Console\Logger\ConsoleLogger;
+
 /**
- * Class used to search data on infogreffe.fr.
- *
- * PHP Version 5.4
- *
- * @category API
- *
- * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  LGPL https://www.gnu.org/copyleft/lesser.html
- *
- * @link     https://github.com/Rudloff/infogreffe-unofficial-api
- * */
+ * Class used to manage companies and search data on infogreffe.fr.
+ */
 class Infogreffe
 {
+    /**
+     * Base API URL
+     * @var string
+     */
     const BASEURL = 'https://www.infogreffe.fr/';
+
+    /**
+     * SIRET
+     * @var int
+     */
     public $siret;
+
+    /**
+     * Company name
+     * @var string
+     */
     public $name;
+
+    /**
+     * Company address
+     * @var string[]
+     */
     public $address;
+
+    /**
+     * Has the company been removed from the registry?
+     * @var bool
+     */
     public $removed;
 
     /**
@@ -38,12 +46,11 @@ class Infogreffe
      *
      * @param int    $siren        SIREN
      * @param int    $nic          NIC
-     * @param string $denomination Name
+     * @param string[] $denomination Name
      * @param array  $address      Address (array with lines)
      * @param int    $zipcode      ZIP code
      * @param string $city         City
-     *
-     * @return void
+     * @param bool   $removed      Has the company been removed from the registry?
      * */
     public function __construct($siren, $nic, $denomination, $address, $zipcode, $city, $removed = false)
     {
@@ -69,7 +76,7 @@ class Infogreffe
      *
      * @return array Results
      */
-    public static function search($query, $logger = null)
+    public static function search($query, ConsoleLogger $logger = null)
     {
         $handler = \GuzzleHttp\HandlerStack::create();
         if (isset($logger)) {

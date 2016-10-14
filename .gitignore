@@ -2,3 +2,4 @@ vendor/
 coverage/
 clover.xml
 node_modules/
+docs/

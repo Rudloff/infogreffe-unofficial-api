@@ -1,16 +1,7 @@
 <?php
 /**
  * SearchCommand class.
- *
- * PHP Version 5.4
- *
- * @category API
- *
- * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  LGPL https://www.gnu.org/copyleft/lesser.html
- *
- * @link     https://github.com/Rudloff/infogreffe-unofficial-api
- * */
+ */
 namespace InfogreffeUnofficial;
 
 use Psr\Log\LogLevel;
@@ -24,16 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * CLI search command.
- *
- * PHP Version 5.4
- *
- * @category API
- *
- * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  LGPL https://www.gnu.org/copyleft/lesser.html
- *
- * @link     https://github.com/Rudloff/infogreffe-unofficial-api
- * */
+ */
 class SearchCommand extends Command
 {
     /**

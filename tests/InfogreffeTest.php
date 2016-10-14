@@ -1,32 +1,14 @@
 <?php
 /**
  * InfogreffeTest class.
- *
- * PHP Version 5.4
- *
- * @category API
- *
- * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  LGPL https://www.gnu.org/copyleft/lesser.html
- *
- * @link     https://github.com/Rudloff/infogreffe-unofficial-api
- * */
+ */
 namespace InfogreffeUnofficial\Test;
 
 use InfogreffeUnofficial\Infogreffe;
 
 /**
  * Unit tests for Infogreffe class.
- *
- * PHP Version 5.4
- *
- * @category API
- *
- * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  LGPL https://www.gnu.org/copyleft/lesser.html
- *
- * @link     https://github.com/Rudloff/infogreffe-unofficial-api
- * */
+ */
 class InfogreffeTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -48,9 +30,9 @@ class InfogreffeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * [searchProvider description].
+     * Provides companies used for the tests.
      *
-     * @return [type] [description]
+     * @return void
      */
     public function searchProvider()
     {
