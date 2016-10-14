@@ -51,15 +51,15 @@ class Infogreffe
      *
      * @param int      $siren        SIREN
      * @param int      $nic          NIC
-     * @param string[] $denomination Name
-     * @param array    $address      Address (array with lines)
+     * @param string   $denomination Name
+     * @param string[] $address      Address (array with lines)
      * @param int      $zipcode      ZIP code
      * @param string   $city         City
      * @param bool     $removed      Has the company been removed from the registry?
      * */
     public function __construct($siren, $nic, $denomination, $address, $zipcode, $city, $removed = false)
     {
-        $this->siret = $siren.$nic;
+        $this->siret = (int) $siren.$nic;
         $this->name = $denomination;
         $this->address['lines'] = $address;
         foreach ($this->address['lines'] as &$line) {
@@ -113,7 +113,7 @@ class Infogreffe
             'derniereRechercheEntreprise'
         );
         $response = json_decode($response->getBody());
-        $idsRCS = $idsNoRCS = [];
+        $idsRCS = $idsNoRCS = $idsRemovedRCS = [];
         foreach ($response->entrepRCSStoreResponse->items as $result) {
             if (isset($result->id)) {
                 $idsRCS[] = $result->id;
@@ -210,7 +210,7 @@ class Infogreffe
      */
     private function getSiren()
     {
-        return substr($this->siret, 0, 9);
+        return (int) substr($this->siret, 0, 9);
     }
 
     /**
