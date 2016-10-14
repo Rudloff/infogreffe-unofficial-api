@@ -1,0 +1,26 @@
+{
+  "name": "infogreffe-unofficial-api",
+  "description": "Unofficial API for infogreffe.fr",
+  "version": "0.2.0",
+  "author": "Pierre Rudloff",
+  "bugs": "https://github.com/Rudloff/infogreffe-unofficial-api/issues",
+  "devDependencies": {
+    "grunt": "~1.0.1",
+    "grunt-contrib-jshint": "~1.0.0",
+    "grunt-fixpack": "~0.1.0",
+    "grunt-jsonlint": "~1.1.0",
+    "grunt-phpcs": "~0.4.0",
+    "grunt-phpunit": "~0.3.6"
+  },
+  "homepage": "https://github.com/Rudloff/infogreffe-unofficial-api",
+  "keywords": [
+    "Infogreffe",
+    "PHP"
+  ],
+  "license": "GPL-3.0",
+  "main": "cli.php",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rudloff/infogreffe-unofficial-api.git"
+  }
+}
