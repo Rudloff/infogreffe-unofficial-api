@@ -2,6 +2,7 @@
 /**
  * Infogreffe class.
  */
+
 namespace InfogreffeUnofficial;
 
 use Symfony\Component\Console\Logger\ConsoleLogger;

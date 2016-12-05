@@ -2,6 +2,7 @@
 /**
  * InfogreffeTest class.
  */
+
 namespace InfogreffeUnofficial\Test;
 
 use InfogreffeUnofficial\Infogreffe;
