@@ -37,20 +37,17 @@ class SearchCommandTest extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(
             [
                 'command' => $this->command->getName(),
-                'query'   => 'Pierre Rudloff',
+                'query'   => 'StrasWeb',
             ]
         );
         $result = <<<'EOT'
-+------------------------+----------------+----------------------------+---------+
-| Name                   | SIRET          | Address                    | Removed |
-+------------------------+----------------+----------------------------+---------+
-| RUDLOFF PIERRE JULES   | 75108721400027 | MONSIEUR PIERRE RUDLOFF    |         |
-|                        |                | 87 ROUTE DU POLYGONE       |         |
-|                        |                | 67100 STRASBOURG           |         |
-| RUDLOFF MATHIEU PIERRE | 52256102600017 | APP 1064                   | ❌       |
-|                        |                | 136 RUE VICTOR HUGO        |         |
-|                        |                | 60280 MARGNY LES COMPIEGNE |         |
-+------------------------+----------------+----------------------------+---------+
++----------------------+----------------+----------------------+---------+
+| Name                 | SIRET          | Address              | Removed |
++----------------------+----------------+----------------------+---------+
+| ASSOCIATION STRASWEB | 52446969900010 | ASSOCIATION STRASWEB |         |
+|                      |                | 3 RUE MARIANO        |         |
+|                      |                | 67100 STRASBOURG     |         |
++----------------------+----------------+----------------------+---------+
 
 EOT;
 
@@ -70,13 +67,13 @@ EOT;
         $this->commandTester->execute(
             [
                 'command' => $this->command->getName(),
-                'query'   => 'Pierre Jules Rudloff',
+                'query'   => 'StrasWeb',
                 '--url'   => true,
             ]
         );
         $result = <<<'EOT'
 +----------------------------------------------------------------------------------------------------------+
-| https://www.infogreffe.fr/societes/entreprise-societe/751087214-rudloff-pierre-jules-75108721400027.html |
+| https://www.infogreffe.fr/societes/entreprise-societe/524469699-association-strasweb-52446969900010.html |
 +----------------------------------------------------------------------------------------------------------+
 
 EOT;

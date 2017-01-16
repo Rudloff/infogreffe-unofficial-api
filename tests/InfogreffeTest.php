@@ -38,12 +38,12 @@ class InfogreffeTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'Pierre Jules Rudloff',
+                'StrasWeb',
                 new Infogreffe(
-                    751087214,
-                    '00027',
-                    'RUDLOFF PIERRE JULES',
-                    ['MONSIEUR PIERRE RUDLOFF', '87 ROUTE DU POLYGONE'],
+                    524469699,
+                    '00010',
+                    'ASSOCIATION STRASWEB',
+                    ['ASSOCIATION STRASWEB', '3 RUE MARIANO'],
                     67100,
                     'STRASBOURG'
                 ),
