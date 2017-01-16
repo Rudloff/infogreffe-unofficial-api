@@ -2,6 +2,7 @@
 /**
  * SearchCommandTest class.
  */
+
 namespace InfogreffeUnofficial\Test;
 
 use InfogreffeUnofficial\SearchCommand;

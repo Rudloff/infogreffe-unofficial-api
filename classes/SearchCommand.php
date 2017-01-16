@@ -2,6 +2,7 @@
 /**
  * SearchCommand class.
  */
+
 namespace InfogreffeUnofficial;
 
 use Psr\Log\LogLevel;
