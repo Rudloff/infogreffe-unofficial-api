@@ -55,7 +55,7 @@ class InfogreffeTest extends \PHPUnit_Framework_TestCase
                     443061841,
                     '00047',
                     'GOOGLE FRANCE',
-                    ['8 R DE LONDRES'],
+                    ['8 RUE DE LONDRES'],
                     75009,
                     'PARIS'
                 ),
