@@ -39,17 +39,6 @@ class InfogreffeTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                'StrasWeb',
-                new Infogreffe(
-                    524469699,
-                    '00010',
-                    'ASSOCIATION STRASWEB',
-                    ['ASSOCIATION STRASWEB', '3 RUE MARIANO'],
-                    67100,
-                    'STRASBOURG'
-                ),
-            ],
-            [
                 'Google France',
                 new Infogreffe(
                     443061841,
