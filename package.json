@@ -19,7 +19,7 @@
     "PHP"
   ],
   "license": "GPL-3.0",
-  "main": "cli.php",
+  "main": "Gruntfile.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Rudloff/infogreffe-unofficial-api.git"
