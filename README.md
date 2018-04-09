@@ -6,7 +6,23 @@ This PHP class allows you to query data on [infogreffe.fr](https://www.infogreff
 
 ### Class
 
-You import `classes/Infogreffe.php` into your PHP code and then use the `Infogreffe::search()` function to retrieve data.
+You can import `classes/Infogreffe.php` into your PHP code and then use the `Infogreffe::search()` function to retrieve data.
+
+You can also import this library with [Composer](https://getcomposer.org/):
+
+```bash
+composer require rudloff/infogreffe-unofficial-api
+```
+
+#### Example
+
+```php
+use InfogreffeUnofficial\Infogreffe;
+
+require_once __DIR__.'/vendor/autoload.php';
+
+var_dump(Infogreffe::search('foo'));
+```
 
 ### CLI
 
