@@ -1,5 +1,8 @@
 # Unofficial API for infogreffe.fr
 
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+You should use the [OpenCorporates API](https://api.opencorporates.com/) instead.
+
 This PHP class allows you to query data on [infogreffe.fr](https://www.infogreffe.fr/societes/).
 
 ## How to use it
